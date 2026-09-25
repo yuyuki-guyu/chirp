@@ -1,6 +1,19 @@
-# chirp
+<p align="center">
+  <img src="assets/logo.svg" alt="chirp logo" width="120" height="120"/>
+</p>
 
-> An [MCP](https://modelcontextprotocol.io) server that gives an AI agent read **and** write access to X (Twitter) — through the internal web API, with no paid API key.
+<h1 align="center">chirp</h1>
+
+<p align="center">
+  <b>An MCP server that gives an AI agent read + write access to X (Twitter)</b><br/>
+  through the internal web API — <b>no paid API key</b>.
+</p>
+
+<p align="center">
+  <a href="LICENSE"><img alt="License: AGPL-3.0" src="https://img.shields.io/badge/License-AGPL--3.0-3A5A98.svg"/></a>
+  <a href="#requirements"><img alt="Node.js >=18" src="https://img.shields.io/badge/Node.js-%3E%3D18-339933.svg"/></a>
+  <a href="#tools"><img alt="MCP: Streamable HTTP" src="https://img.shields.io/badge/MCP-Streamable%20HTTP-FF6B35.svg"/></a>
+</p>
 
 X retired its free v1.1 API and the paid tiers are prohibitively expensive for personal agents. This project re-uses the same GraphQL endpoint the x.com web app calls, wraps it in a small MCP server, and exposes eight tools your agent can call directly: read your timeline, search, check trends, read a profile — and post or reply.
 

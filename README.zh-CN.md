@@ -1,6 +1,19 @@
-# chirp · 中文教程
+<p align="center">
+  <img src="assets/logo.svg" alt="chirp logo" width="120" height="120"/>
+</p>
 
-> 一个 MCP 服务器，让 AI 智能体（Claude、kelivo、Cursor 等）**读 X（Twitter）** 也能 **发 X** —— 走 x.com 网页版内部接口，**不花一分钱 API 费**。
+<h1 align="center">chirp · 中文教程</h1>
+
+<p align="center">
+  <b>让 AI 智能体（Claude、kelivo、Cursor 等）读 X 也能发 X 的 MCP 服务器</b><br/>
+  走 x.com 网页版内部接口 —— <b>不花一分钱 API 费</b>。
+</p>
+
+<p align="center">
+  <a href="LICENSE"><img alt="License: AGPL-3.0" src="https://img.shields.io/badge/License-AGPL--3.0-3A5A98.svg"/></a>
+  <a href="#本地快速开始"><img alt="Node.js >=18" src="https://img.shields.io/badge/Node.js-%3E%3D18-339933.svg"/></a>
+  <a href="#工具一览"><img alt="MCP: Streamable HTTP" src="https://img.shields.io/badge/MCP-Streamable%20HTTP-FF6B35.svg"/></a>
+</p>
 
 X 早就砍掉了免费的 v1.1 API，付费档对个人智能体来说贵得离谱。本项目复用了 x.com 网页版自己调用的那个 GraphQL 接口，包成一个小型 MCP 服务器，暴露 8 个工具给智能体直接调用：刷时间线、搜索、看热搜、看主页、发推、回复。
 

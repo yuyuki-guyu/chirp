@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="chirp logo">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FF7A3D"/>
+      <stop offset="100%" stop-color="#F43F5E"/>
+    </linearGradient>
+    <linearGradient id="beak" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFD23F"/>
+      <stop offset="100%" stop-color="#FFA51F"/>
+    </linearGradient>
+  </defs>
+
+  <!-- rounded background tile -->
+  <rect x="6" y="6" width="244" height="244" rx="58" fill="url(#bg)"/>
+
+  <!-- tail -->
+  <path d="M80 130 L50 108 L62 142 L46 154 Z" fill="#ffffff" opacity="0.92"/>
+
+  <!-- body -->
+  <ellipse cx="120" cy="152" rx="52" ry="40" fill="#ffffff"/>
+
+  <!-- head -->
+  <circle cx="150" cy="102" r="34" fill="#ffffff"/>
+
+  <!-- open beak -->
+  <path d="M176 92 L214 98 L176 110 Z" fill="url(#beak)"/>
+
+  <!-- eye -->
+  <circle cx="158" cy="94" r="5.5" fill="#2B2D42"/>
+
+  <!-- cheek -->
+  <circle cx="142" cy="112" r="7" fill="#FF9FB2" opacity="0.55"/>
+
+  <!-- wing -->
+  <path d="M112 136 Q96 124 104 106 Q126 114 136 140 Z" fill="#2B2D42" opacity="0.16"/>
+
+  <!-- sound waves (chirp!) -->
+  <g stroke="#ffffff" stroke-width="7" stroke-linecap="round" fill="none">
+    <path d="M224 84 q9 -6 0 -12"/>
+    <path d="M238 74 q14 -10 0 -20"/>
+  </g>
+</svg>
