@@ -1,0 +1,43 @@
+{
+  "name": "chirp",
+  "version": "1.0.0",
+  "description": "An MCP server that lets an AI agent read and post on X (Twitter) through the internal web API — no paid API key required.",
+  "type": "module",
+  "main": "src/server.mjs",
+  "bin": {
+    "chirp": "src/server.mjs"
+  },
+  "files": [
+    "src",
+    "scripts",
+    "README.md",
+    "README.zh-CN.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "start": "node src/server.mjs",
+    "capture-cookies": "node scripts/capture-cookies.mjs",
+    "smoke-test": "node scripts/smoke-test.mjs"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "twitter",
+    "x",
+    "ai",
+    "agent",
+    "claude"
+  ],
+  "license": "AGPL-3.0",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "@the-convocation/twitter-scraper": "^0.22.3",
+    "zod": "^4.6.1"
+  },
+  "devDependencies": {
+    "playwright": "^1.49.0"
+  }
+}

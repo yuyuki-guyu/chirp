@@ -1,0 +1,13 @@
+# dependencies
+node_modules/
+
+# secrets — NEVER commit these
+cookies.json
+.env
+.env.*
+!.env.example
+
+# runtime
+*.log
+ecosystem.config.cjs
+.DS_Store
