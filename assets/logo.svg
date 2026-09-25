@@ -1,42 +1,47 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="chirp logo">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#FF7A3D"/>
-      <stop offset="100%" stop-color="#F43F5E"/>
-    </linearGradient>
+    <radialGradient id="bg" cx="32%" cy="26%" r="90%">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="45%" stop-color="#4338CA"/>
+      <stop offset="100%" stop-color="#1E1B4B"/>
+    </radialGradient>
     <linearGradient id="beak" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#FFD23F"/>
-      <stop offset="100%" stop-color="#FFA51F"/>
+      <stop offset="0%" stop-color="#FCD34D"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
     </linearGradient>
   </defs>
 
-  <!-- rounded background tile -->
-  <rect x="6" y="6" width="244" height="244" rx="58" fill="url(#bg)"/>
+  <!-- circular tile -->
+  <circle cx="128" cy="128" r="122" fill="url(#bg)"/>
+
+  <!-- subtle top-left sheen -->
+  <ellipse cx="88" cy="64" rx="78" ry="54" fill="#ffffff" opacity="0.05"/>
 
   <!-- tail -->
-  <path d="M80 130 L50 108 L62 142 L46 154 Z" fill="#ffffff" opacity="0.92"/>
+  <path d="M 84 140 C 58 134 44 112 38 86 C 58 96 72 106 88 118 Z" fill="#ffffff"/>
 
   <!-- body -->
-  <ellipse cx="120" cy="152" rx="52" ry="40" fill="#ffffff"/>
+  <ellipse cx="116" cy="146" rx="50" ry="42" fill="#ffffff"/>
 
   <!-- head -->
-  <circle cx="150" cy="102" r="34" fill="#ffffff"/>
-
-  <!-- open beak -->
-  <path d="M176 92 L214 98 L176 110 Z" fill="url(#beak)"/>
-
-  <!-- eye -->
-  <circle cx="158" cy="94" r="5.5" fill="#2B2D42"/>
-
-  <!-- cheek -->
-  <circle cx="142" cy="112" r="7" fill="#FF9FB2" opacity="0.55"/>
+  <circle cx="150" cy="96" r="30" fill="#ffffff"/>
 
   <!-- wing -->
-  <path d="M112 136 Q96 124 104 106 Q126 114 136 140 Z" fill="#2B2D42" opacity="0.16"/>
+  <path d="M 108 126 C 98 114 102 98 120 94 C 130 108 130 122 122 132 Z" fill="#1E1B4B" opacity="0.14"/>
 
-  <!-- sound waves (chirp!) -->
-  <g stroke="#ffffff" stroke-width="7" stroke-linecap="round" fill="none">
-    <path d="M224 84 q9 -6 0 -12"/>
-    <path d="M238 74 q14 -10 0 -20"/>
-  </g>
+  <!-- open beak -->
+  <path d="M 176 86 L 208 94 L 176 100 Z" fill="url(#beak)"/>
+  <path d="M 176 102 L 200 108 L 176 112 Z" fill="url(#beak)"/>
+
+  <!-- eye + highlight -->
+  <circle cx="158" cy="88" r="5.5" fill="#1E1B4B"/>
+  <circle cx="159.5" cy="86.5" r="1.8" fill="#ffffff"/>
+
+  <!-- legs -->
+  <line x1="104" y1="184" x2="104" y2="202" stroke="#F59E0B" stroke-width="5" stroke-linecap="round"/>
+  <line x1="128" y1="184" x2="128" y2="202" stroke="#F59E0B" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- sound waves -->
+  <path d="M 214 82 q 8 -5 0 -10" stroke="#FCD34D" stroke-width="6" stroke-linecap="round" fill="none"/>
+  <path d="M 226 72 q 13 -9 0 -18" stroke="#FCD34D" stroke-width="6" stroke-linecap="round" fill="none"/>
 </svg>
