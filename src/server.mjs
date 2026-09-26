@@ -38,6 +38,11 @@ const DEFAULT_BEARER =
 // query id" for how to re-capture it from your browser's Network tab.
 const DEFAULT_CREATE_TWEET_QUERY_ID = 'GYdIGqVWfZNho79bQ2XDoA';
 
+// HomeTimeline (For You) and HomeLatestTimeline (Following) query ids. Rotated
+// by X like the CreateTweet id; re-capture from DevTools when they change.
+const DEFAULT_HOME_TIMELINE_QUERY_ID = '3tb-_5Lf7kdCZ1cFHmsEfg';
+const DEFAULT_HOME_LATEST_TIMELINE_QUERY_ID = 'eObmT5Nuapp04u8bYWf49Q';
+
 // Feature flags sent in the CreateTweet body. These are less volatile than the
 // query id; capture a fresh copy from DevTools if X starts rejecting the body.
 const CREATE_TWEET_FEATURES = {
@@ -89,6 +94,10 @@ const config = {
   bearer: process.env.X_BEARER_TOKEN || DEFAULT_BEARER,
   createTweetQueryId:
     process.env.X_CREATE_TWEET_QUERY_ID || DEFAULT_CREATE_TWEET_QUERY_ID,
+  homeTimelineQueryId:
+    process.env.X_HOME_TIMELINE_QUERY_ID || DEFAULT_HOME_TIMELINE_QUERY_ID,
+  homeLatestTimelineQueryId:
+    process.env.X_HOME_LATEST_TIMELINE_QUERY_ID || DEFAULT_HOME_LATEST_TIMELINE_QUERY_ID,
 };
 
 // ---------------------------------------------------------------------------
@@ -208,37 +217,76 @@ async function profileX(username) {
   };
 }
 
-/** Approximate home timeline: latest tweet from each followed account. */
-async function homeTimelineX(count) {
-  const s = await getReadScraper();
-  let myId = '';
-  try {
-    const p = await s.getProfile(config.username);
-    myId = p?.userId || p?.id || '';
-  } catch {
-    /* ignore */
+function isoOrRaw(s) {
+  if (!s) return '';
+  const d = new Date(s);
+  return isNaN(d.getTime()) ? s : d.toISOString();
+}
+
+/** Flatten X's timeline GraphQL response into the shared tweet shape. */
+function parseTimeline(data, count) {
+  const entries = data?.data?.home?.home_timeline_urt?.instructions
+    ?.flatMap((i) => i.entries || []) || [];
+  const out = [];
+  for (const e of entries) {
+    if (out.length >= count) break;
+    const r = e?.content?.itemContent?.tweet_results?.result;
+    if (!r || r.__typename !== 'Tweet') continue;
+    const lg = r.legacy || {};
+    const u = r.core?.user_results?.result || {};
+    const username = u.core?.screen_name || u.legacy?.screen_name || '';
+    const name = u.core?.name || u.legacy?.name || '';
+    const id = r.rest_id || lg.id_str || '';
+    if (!id) continue;
+    out.push({
+      id,
+      name,
+      username,
+      text: (lg.full_text || '').slice(0, 500),
+      url: username ? `https://x.com/${username}/status/${id}` : '',
+      likes: lg.favorite_count ?? 0,
+      retweets: lg.retweet_count ?? 0,
+      replies: lg.reply_count ?? 0,
+      time: isoOrRaw(lg.created_at),
+    });
   }
-  if (!myId) {
-    try { myId = await s.getUserIdByScreenName(config.username); } catch { /* ignore */ }
+  return out;
+}
+
+/**
+ * Home timeline: call X's HomeTimeline (For You) or HomeLatestTimeline
+ * (Following) GraphQL directly, instead of approximating from the follow list.
+ */
+async function homeTimelineX(count, tab) {
+  const following = tab === 'following';
+  const queryId = following ? config.homeLatestTimelineQueryId : config.homeTimelineQueryId;
+  const op = following ? 'HomeLatestTimeline' : 'HomeTimeline';
+  const res = await fetch(`https://x.com/i/api/graphql/${queryId}/${op}`, {
+    method: 'POST',
+    headers: {
+      authorization: `Bearer ${config.bearer}`,
+      cookie: loadCookieStrings().join('; '),
+      'content-type': 'application/json',
+      'x-csrf-token': ct0Value(),
+      'x-twitter-auth-type': 'OAuth2Session',
+      'x-twitter-active-user': 'yes',
+      'x-twitter-client-language': 'en',
+      'user-agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+    },
+    body: JSON.stringify({
+      variables: { count, includePromotedContent: true, latestControlAvailable: true, requestContext: 'launch', withCommunity: true, seenTweetIds: [] },
+      features: {},
+      fieldToggles: { withArticleRichContentState: false, withArticlePlainText: false, withGrokAnalyze: false },
+      queryId,
+    }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (data?.errors?.length) {
+    const msg = data.errors.map((e) => e.message).join('; ');
+    throw new Error(`X rejected the timeline request: ${msg}`);
   }
-  const following = [];
-  try {
-    for await (const p of s.getFollowing(myId, 50)) if (p?.username) following.push(p);
-  } catch {
-    /* ignore */
-  }
-  const tweets = [];
-  for (const p of following.slice(0, 20)) {
-    try {
-      const lt = await s.getLatestTweet(p.username);
-      const f = fmtTweet(lt);
-      if (f) { f.author_name = p.name || p.username; tweets.push(f); }
-    } catch {
-      /* ignore per-account failures */
-    }
-  }
-  tweets.sort((a, b) => String(b.time || '').localeCompare(String(a.time || '')));
-  return tweets.slice(0, count);
+  return parseTimeline(data, count);
 }
 
 // ---------------------------------------------------------------------------
@@ -311,11 +359,14 @@ function getServer() {
   server.registerTool(
     'x_read_timeline',
     {
-      description: 'Read the home timeline (latest tweets from accounts you follow). Returns id/author/text/link.',
-      inputSchema: { count: z.number().int().min(1).max(50).default(20).describe('how many tweets to read') },
+      description: 'Read the home timeline. tab="foryou" returns the For You feed (default: follows + trending + recommendations); tab="following" returns the Following feed (only accounts you follow, chronological). Returns id/author/text/link/counts.',
+      inputSchema: {
+        count: z.number().int().min(1).max(50).default(20).describe('how many tweets to read'),
+        tab: z.enum(['foryou', 'following']).default('foryou').describe('foryou=For You feed / following=Following feed'),
+      },
     },
-    async ({ count }) => {
-      const tweets = await homeTimelineX(count);
+    async ({ count, tab }) => {
+      const tweets = await homeTimelineX(count, tab);
       return { content: [{ type: 'text', text: JSON.stringify(tweets, null, 2) }] };
     }
   );

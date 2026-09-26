@@ -1,8 +1,4 @@
-<p align="center">
-  <img src="assets/logo.svg" alt="chirp logo" width="120" height="120"/>
-</p>
-
-<h1 align="center">chirp</h1>
+<h1 align="center">🐦 chirp</h1>
 
 <p align="center">
   <b>An MCP server that gives an AI agent read + write access to X (Twitter)</b><br/>
@@ -52,7 +48,7 @@ That decision is the whole reason this server keeps working after X changes its 
 
 | Tool | Action | Read/Write |
 |------|--------|-----------|
-| `x_read_timeline` | Latest tweets from accounts you follow | read |
+| `x_read_timeline` | Home timeline — For You feed (`tab="foryou"`, default) or Following feed (`tab="following"`) | read |
 | `x_search` | Search tweets by keyword | read |
 | `x_trends` | Current trending topics | read |
 | `x_get_tweet` | Read one tweet by id | read |
@@ -113,6 +109,8 @@ Copy `.env.example` to `.env`. Every value is optional except `X_USERNAME` (for 
 | `X_USERNAME` | *(empty)* | Your handle without `@`, for `x_read_timeline` |
 | `X_BEARER_TOKEN` | *(built-in)* | Override when X rotates the web-app bearer token |
 | `X_CREATE_TWEET_QUERY_ID` | *(built-in)* | Override when X rotates the CreateTweet query id |
+| `X_HOME_TIMELINE_QUERY_ID` | *(built-in)* | Override when X rotates the HomeTimeline (For You) query id |
+| `X_HOME_LATEST_TIMELINE_QUERY_ID` | *(built-in)* | Override when X rotates the HomeLatestTimeline (Following) query id |
 
 ## Deploy to a VPS (with Cloudflare Tunnel)
 

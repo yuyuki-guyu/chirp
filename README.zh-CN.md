@@ -72,7 +72,7 @@ X 早就砍掉了免费的 v1.1 API，付费档对个人智能体来说贵得离
 
 | 工具 | 作用 | 读/写 |
 |------|------|-------|
-| `x_read_timeline` | 我关注账号的最新推文 | 读 |
+| `x_read_timeline` | 首页时间线 ——「为你推荐」流（`tab="foryou"`，默认）或「关注」流（`tab="following"`） | 读 |
 | `x_search` | 按关键词搜索推文 | 读 |
 | `x_trends` | 当前热门趋势 | 读 |
 | `x_get_tweet` | 按 id 读一条推文 | 读 |
@@ -147,6 +147,8 @@ npm run capture-cookies
 | `X_USERNAME` | *(空)* | 你的用户名（不带 `@`） |
 | `X_BEARER_TOKEN` | *(内置)* | X 轮换 web 端 bearer 时覆盖 |
 | `X_CREATE_TWEET_QUERY_ID` | *(内置)* | X 轮换 CreateTweet query id 时覆盖 |
+| `X_HOME_TIMELINE_QUERY_ID` | *(内置)* | X 轮换 HomeTimeline（为你推荐）query id 时覆盖 |
+| `X_HOME_LATEST_TIMELINE_QUERY_ID` | *(内置)* | X 轮换 HomeLatestTimeline（关注）query id 时覆盖 |
 
 ## 部署到 VPS + Cloudflare 隧道
 
